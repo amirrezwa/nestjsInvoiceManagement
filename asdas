@@ -1,0 +1,26 @@
+// export class CreateUserDto {
+//   @IsString()
+//   @IsNotEmpty()
+//   first_name: string;
+
+//   @IsString()
+//   @IsNotEmpty()
+//   last_name: string;
+
+  // @IsNumber()
+  // @IsNotEmpty()
+  // national_id: number;
+
+  // @IsEnum(['ADMIN', 'INTERN', 'MECHANIC'], {
+  //   message: 'valid role require',
+  // })
+  // role: 'ADMIN' | 'INTERN' | 'MECHANIC';
+
+  // mobile: number;
+
+  // created_at: string;
+
+  // status: boolean;
+
+  // description: string;
+//}

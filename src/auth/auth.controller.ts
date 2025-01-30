@@ -1,34 +1,27 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { LoginRequestDTO } from './dto/auth.dto';
 import { AuthService } from './auth.service';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { JwtAuthGuard } from './guards/jwt.guard';
+import { Request } from 'express';
 
-@Controller('auth')
+@Controller('Auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private authService: AuthService) {}
 
-  @Post()
-  create(@Body() createAuthDto: CreateAuthDto) {
-    return this.authService.create(createAuthDto);
+  @Post('login')
+  login(@Body() body: LoginRequestDTO): string {
+    return this.authService.validateUser(body);
   }
 
-  @Get()
-  findAll() {
-    return this.authService.findAll();
+  @Get('status')
+  @UseGuards(JwtAuthGuard(['manager']))
+  status(@Req() req: Request) {
+    return 'OKKKKKKKKKKK 1';
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
-    return this.authService.update(+id, updateAuthDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id);
+  @Get('status2')
+  @UseGuards(JwtAuthGuard(['user']))
+  status2(@Req() req: Request) {
+    return 'OKKKKKKKKKKK 2';
   }
 }
