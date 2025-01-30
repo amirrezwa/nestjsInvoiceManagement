@@ -1,26 +1,33 @@
 import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { JwtService } from '@nestjs/jwt';
+import { LoginRequestDTO } from './dto/auth.dto';
 
+const fakeUsers = [
+  { id: 1, username: 'anson', password: 'password', roles: ['user'] },
+  {
+    id: 2,
+    username: 'amir',
+    password: 'secret',
+    roles: ['user', 'admin'],
+  },
+];
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
-  }
+  constructor(private jwtService: JwtService) {}
 
-  findAll() {
-    return `This action returns all auth`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
-
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+  validateUser({ username, password }: LoginRequestDTO): string {
+    const user = fakeUsers.find(
+      (user) =>
+        user.username.toLowerCase() === username.toLowerCase() &&
+        user.password === password,
+    );
+    if (!user) {
+      throw Error('User not found');
+    }
+    return this.jwtService.sign({
+      username: user.username,
+      id: user.id,
+      roles: user.roles ?? [],
+    });
   }
 }

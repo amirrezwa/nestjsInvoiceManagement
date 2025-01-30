@@ -1,27 +1,19 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+
 import { AuthModule } from './auth/auth.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
-import { Users } from './entities/user.entity';
+import { InvoiceModule } from './invoice/invoice.module';
+import { ErrorHandlerMiddleware } from './error-handler/error-handler.middleware';
+
 @Module({
-  imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'invoice',
-      password: 'secret123',
-      database: 'invoice_db',
-      entities: [__dirname + '/**/*.entity{.ts,js}'],
-      synchronize: true,
-    }),
-    TypeOrmModule.forFeature([Users]),
-    AuthModule,
-    UserModule,
-  ],
+  imports: [AuthModule, UserModule, InvoiceModule],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(ErrorHandlerMiddleware).forRoutes('*');
+  }
+}
