@@ -1,8 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { CreateInvoiceDto, UpdateInvoiceDto } from './dto/invoice.dto';
 import { Invoice } from './entities/invoice.entity';
-import { PrismaService } from 'prismaDB/prisma.service';
-
+import { PrismaService } from '../prismaDB/prisma.service';
 @Injectable()
 export class InvoiceService {
   constructor(private prisma: PrismaService) {}
@@ -41,14 +40,9 @@ export class InvoiceService {
   }
 
   async remove(id: number) {
-    //   try {
-    //     await this.prisma.invoice.delete({
-    //       where: { id },
-    //     });
-    //   } catch (err) {
-    //     throw new Error(`Invoice not found, id: ${id}`);
-    //     console.error(err);
-    //   }
+    await this.prisma.invoice.delete({
+      where: { id },
+    });
 
     const invoice = await this.prisma.invoice.findUnique({
       where: { id },
