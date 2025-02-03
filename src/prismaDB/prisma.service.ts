@@ -14,6 +14,7 @@ export class PrismaService
 
   async onModuleInit() {
     await this.$connect(); // اتصال به پایگاه داده
+    console.log('Connected to DB:', process.env.DATABASE_URL);
   }
 
   async onModuleDestroy() {
